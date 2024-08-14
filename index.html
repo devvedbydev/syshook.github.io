@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>systemhook.lol</title>
+    <link rel="icon" href="logo.png" type="image/png"> <!-- Favicon -->
+
+    <!-- Import pixel font -->
+    <style>
+        @font-face {
+            font-family: 'Glitch';
+            src: url('Glitch.ttf') format('truetype');
+        }
+
+        /* Reset margin and padding */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /* Hide overflow to prevent scrollbars */
+            background-color: #1e1e1e; /* Dark gray background */
+            color: white;
+            font-family: 'Glitch', sans-serif; /* Use pixel font */
+            position: relative; /* Required for absolutely positioned elements */
+        }
+        /* Centered text and icons styling */
+        .centered-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .centered-text h1 {
+            font-size: 10em; /* Large text size */
+            margin: 0;
+        }
+        /* Container for icons */
+        .icons-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px; /* Margin for spacing between text and icons */
+        }
+        /* Discord icon styling */
+        .discord-icon {
+            width: 60px; /* Adjust the size of the icon */
+            height: auto;
+            cursor: pointer;
+            margin-right: 20px; /* Space between Discord icon and book icon */
+        }
+        /* Book icon styling */
+        .book-icon {
+            width: 60px; /* Adjust the size of the icon */
+            height: auto;
+            cursor: pointer;
+        }
+        /* Raindrop styling */
+        .raindrop {
+            position: absolute;
+            background: #0077b6; /* Darker blue color for raindrops */
+            width: 4px; /* Slightly larger width */
+            height: 20px; /* Slightly larger height */
+            opacity: 0.8; /* Slightly less transparent */
+            pointer-events: none; /* Prevents interaction with the raindrops */
+            border-radius: 2px; /* Rounded edges for a smoother look */
+        }
+        /* Animation for falling raindrops */
+        @keyframes fall {
+            to {
+                transform: translateY(100vh); /* Move raindrop to the bottom of the viewport */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Centered text and icons -->
+    <div class="centered-text">
+        <h1>systemhook</h1>
+        <div class="icons-container">
+            <img src="discord.png" alt="Discord Icon" class="discord-icon" onclick="window.open('https://discord.gg/syshook', '_blank')">
+            <a href="docs.html">
+                <img src="book.png" alt="Book Icon" class="book-icon">
+            </a>
+        </div>
+    </div>
+
+    <!-- Audio element for background music -->
+    <audio id="background-audio" src="audio.mp3" loop></audio>
+
+    <!-- JavaScript for handling audio playback and generating raindrops -->
+    <script>
+        // Function to start audio playback
+        function startAudio() {
+            const audio = document.getElementById('background-audio');
+            audio.play().catch(error => {
+                // Handle errors (e.g., user interaction required)
+                console.log('Autoplay prevented, user interaction required');
+            });
+        }
+
+        // Add event listener to start audio playback on user interaction
+        document.addEventListener('click', startAudio);
+        document.addEventListener('keydown', startAudio);
+
+        function createRaindrop() {
+            const raindrop = document.createElement('div');
+            raindrop.className = 'raindrop';
+            raindrop.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
+            raindrop.style.animation = `fall ${Math.random() * 3 + 2}s linear infinite`; // Slightly longer animation duration
+            document.body.appendChild(raindrop);
+
+            // Remove the raindrop element after animation completes
+            raindrop.addEventListener('animationend', () => {
+                raindrop.remove();
+            });
+        }
+
+        function generateRaindrops() {
+            const raindropCount = 5; // Adjusted number of raindrops
+            const interval = 1000; // Interval for generating raindrops
+
+            // Create raindrops with visibility control
+            let rainInterval = setInterval(() => {
+                for (let i = 0; i < raindropCount; i++) {
+                    createRaindrop();
+                }
+            }, interval);
+
+            // Stop creating raindrops when the tab is inactive
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    clearInterval(rainInterval);
+                } else {
+                    rainInterval = setInterval(() => {
+                        for (let i = 0; i < raindropCount; i++) {
+                            createRaindrop();
+                        }
+                    }, interval);
+                }
+            });
+        }
+
+        // Start generating raindrops
+        generateRaindrops();
+    </script>
+</body>
+</html>

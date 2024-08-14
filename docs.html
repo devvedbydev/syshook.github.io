@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SystemHook Documentation</title>
+    <link rel="icon" href="logo.png" type="image/png"> <!-- Favicon -->
+
+    <!-- Import pixel font -->
+    <style>
+        @font-face {
+            font-family: 'Glitch';
+            src: url('Glitch.ttf') format('truetype');
+        }
+
+        /* Global Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background-color: #1e1e1e;
+            color: white;
+            font-family: 'Glitch', sans-serif;
+            position: relative;
+        }
+
+        /* Header Styles */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(30, 30, 30, 0.9);
+            padding: 40px 20px; /* Increased padding */
+            color: white;
+            text-align: center;
+            font-size: 3em; /* Larger font size for main title */
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5); /* Optional: shadow for better visibility */
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 300px 20px 20px; /* Significantly increased top padding */
+            max-height: calc(100vh - 300px); /* Adjusted to account for header and footer */
+            overflow-y: auto;
+            box-sizing: border-box;
+            max-width: 1200px; /* Optional: Limit the maximum width for readability */
+            margin: 0 auto; /* Center content horizontally */
+        }
+
+        /* Installation Guide Styles */
+        .installation-guide {
+            text-align: left;
+        }
+
+        .installation-guide p {
+            font-size: 1.5em; /* Larger font size for section title */
+            margin-bottom: 20px;
+        }
+
+        .installation-guide ol {
+            list-style-type: decimal; /* Numbered list */
+            padding-left: 20px;
+        }
+
+        .installation-guide li {
+            margin-bottom: 10px;
+        }
+
+        /* Custom Functions Styles */
+        .custom-functions {
+            text-align: left;
+            margin-top: 40px;
+        }
+
+        .custom-functions h2 {
+            font-size: 2em; /* Smaller than the main title but larger than normal text */
+            margin-bottom: 20px;
+        }
+
+        .custom-functions h3 {
+            font-size: 1.5em; /* Smaller than h2 for sub-sections */
+            margin-top: 20px;
+        }
+
+        .custom-functions pre {
+            background: #333;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            text-align: left;
+            max-width: 100%;
+            margin-top: 10px;
+        }
+
+        .custom-functions code {
+            background: #333;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        /* Back to Home Button */
+        .back-to-home {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(30, 30, 30, 0.9);
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-size: 1.5em;
+            text-align: center;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-home img {
+            width: 24px;
+            margin-right: 8px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #333;
+        }
+
+        /* Raindrop Styles */
+        .rain-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 500;
+        }
+
+        .raindrop {
+            position: absolute;
+            background: #0077b6;
+            width: 2px;
+            height: 15px;
+            opacity: 0.4;
+            border-radius: 1px;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        /* Footer Styles */
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(30, 30, 30, 0.9);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1em;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>SystemHook Documentation</h1>
+    </header>
+
+    <!-- Raindrop container -->
+    <div class="rain-container" id="rain-container"></div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <!-- Installation Guide -->
+        <div class="installation-guide">
+            <p><strong>Getting Started:</strong></p>
+            <ol>
+                <li><code>!redeem &lt;your key&gt;</code> in <strong>commands</strong></li>
+                <li>Uninstall anti-virus (adding an exception won't work)</li>
+                <li><code>!download</code> in <strong>commands</strong>, download it and extract to desktop</li>
+                <li>Run <code>hwid.exe</code> as admin and copy HWID</li>
+                <li><code>!register &lt;your hwid&gt;</code> in <strong>commands</strong></li>
+                <li>Run <code>driver.exe</code> as admin</li>
+                <li>Visit <a href="http://localhost:8000/" target="_blank">http://localhost:8000/</a> to access the code editor</li>
+            </ol>
+        </div>
+        
+        <!-- Custom Functions -->
+        <div class="custom-functions">
+            <h2>Custom Functions</h2>
+            <h3>sys_post</h3>
+            <p>The <code>sys_post</code> function allows you to send HTTP POST requests.</p>
+            <pre><code>local response = sys_post({
+    Url = "https://discord.com/api/webhooks/123123123/blablabla",
+    Body = "content=onion"
+})
+print(response.StatusCode)</code></pre>
+        </div>
+    </div>
+
+    <!-- Back to Home -->
+    <div class="back-to-home" onclick="window.location.href='index.html'">
+        <img src="logo.png" alt="Home Icon"> Back to Home
+    </div>
+
+    <!-- Footer for support -->
+    <footer>
+        For support, contact <strong>devvedbydev</strong> on <a href="https://discord.gg/syshook" target="_blank">Discord</a> or create a ticket. Leaking or cracking will result in being blacklisted and banned.
+    </footer>
+
+    <!-- Raindrop generation -->
+    <script>
+        function createRaindrop() {
+            const raindrop = document.createElement('div');
+            raindrop.className = 'raindrop';
+            raindrop.style.left = Math.random() * 100 + 'vw';
+            raindrop.style.animation = `fall ${Math.random() * 2 + 3}s linear infinite`;
+            document.getElementById('rain-container').appendChild(raindrop);
+
+            raindrop.addEventListener('animationend', () => {
+                raindrop.remove();
+            });
+        }
+
+        function generateRaindrops() {
+            const raindropCount = 5;
+            const interval = 1000;
+
+            let rainInterval = setInterval(() => {
+                for (let i = 0; i < raindropCount; i++) {
+                    createRaindrop();
+                }
+            }, interval);
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    clearInterval(rainInterval);
+                } else {
+                    rainInterval = setInterval(() => {
+                        for (let i = 0; i < raindropCount; i++) {
+                            createRaindrop();
+                        }
+                    }, interval);
+                }
+            });
+        }
+
+        generateRaindrops();
+    </script>
+
+    <!-- Audio element for background music -->
+    <audio id="background-audio" src="audio.mp3" loop></audio>
+
+    <!-- JavaScript for handling audio playback -->
+    <script>
+        function startAudio() {
+            const audio = document.getElementById('background-audio');
+            audio.play().catch(error => {
+                console.log('Autoplay prevented, user interaction required');
+            });
+        }
+
+        document.addEventListener('click', startAudio);
+        document.addEventListener('keydown', startAudio);
+    </script>
+</body>
+</html>
